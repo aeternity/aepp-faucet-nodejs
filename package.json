@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aeternity/aepp-faucet.git"
+    "url": "git+https://github.com/aeternity/aepp-faucet-nodejs.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/aeternity/aepp-faucet/issues"
+    "url": "https://github.com/aeternity/aepp-faucet-nodejs/issues"
   },
-  "homepage": "https://github.com/aeternity/aepp-faucet#readme",
+  "homepage": "https://github.com/aeternity/aepp-faucet-nodejs#readme",
   "dependencies": {
     "@aeternity/aepp-sdk": "^8.2.1",
     "express": "^4.17.1",

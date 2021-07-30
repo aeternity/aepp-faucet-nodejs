@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aeternity/aepp-faucet.git"
+    "url": "git+https://github.com/aeternity/aepp-faucet-nodejs.git"
   },
   "keywords": [
     "blockchain",
@@ -20,9 +20,9 @@
   "author": "Enrico Icardi <enrico@welance.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/aeternity/aepp-faucet/issues"
+    "url": "https://github.com/aeternity/aepp-faucet-nodejs/issues"
   },
-  "homepage": "https://github.com/aeternity/aepp-faucet#readme",
+  "homepage": "https://github.com/aeternity/aepp-faucet-nodejs#readme",
   "dependencies": {
     "axios": "^0.19.0",
     "babel-loader": "^8.0.6"
