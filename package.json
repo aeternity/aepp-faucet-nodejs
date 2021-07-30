@@ -1,0 +1,27 @@
+{
+  "name": "aepp-faucet",
+  "version": "1.0.0",
+  "description": "Send Online Top-up. Instant Account Recharge",
+  "main": "faucet.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aeternity/aepp-faucet.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aeternity/aepp-faucet/issues"
+  },
+  "homepage": "https://github.com/aeternity/aepp-faucet#readme",
+  "dependencies": {
+    "@aeternity/aepp-sdk": "^8.2.1",
+    "express": "^4.17.1",
+    "luxon": "^1.27.0",
+    "mustache-express": "^1.3.0",
+    "node-cache": "^5.1.2",
+    "winston": "^3.3.3"
+  }
+}
