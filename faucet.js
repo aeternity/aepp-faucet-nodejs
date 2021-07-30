@@ -48,7 +48,7 @@ const logger = winston.createLogger({
     transports: [new winston.transports.Console()]
 });
 
-const address_cache = new NodeCache({
+const addressCache = new NodeCache({
     maxKeys: CACHE_MAX_SIZE,
     stdTTL: CACHE_MAX_AGE,
     checkperiod: 60
@@ -95,22 +95,22 @@ const run = async () => {
                 return;
             }
             // check if address is still in cache
-            const top_up_date = address_cache.get(address);
-            if(top_up_date) {
-                const graylist_exp_date = top_up_date.plus({seconds: CACHE_MAX_AGE});
-                const delta = graylist_exp_date.diffNow().toFormat("h'h' mm'm' ss's'");
+            const topUpDate = addressCache.get(address);
+            if(topUpDate) {
+                const graylistExpDate = topUpDate.plus({seconds: CACHE_MAX_AGE});
+                const delta = graylistExpDate.diffNow().toFormat("h'h' mm'm' ss's'");
                 const message = `The address ${address} is graylisted for another ${delta}`;;
                 logger.warn(message);
                 res.status(425);
                 res.send({message});
                 return;
             }
-            address_cache.set(address, DateTime.now());
+            addressCache.set(address, DateTime.now());
             const tx = await client.spend(AmountFormatter.toAettos(TOPUP_AMOUNT), address, { payload: SPEND_TX_PAYLOAD });
             logger.info(`Top up address ${address} with ${TOPUP_AMOUNT} AE tx_hash: ${tx.hash} completed.`);
             logger.debug(JSON.stringify(tx));
-            const new_balance = await client.getBalance(address);
-            res.send({tx_hash: tx.hash, balance: new_balance});
+            const newBalance = await client.getBalance(address);
+            res.send({tx_hash: tx.hash, balance: newBalance});
         } catch (err) {
             logger.error(`Generic error: top up account ${address} of ${TOPUP_AMOUNT} AE on ${NODE_URL.replace('https://', '')} failed with error.`, err);
             res.send({message: `""Unknown error, please contact <a href="${SUPPORT_EMAIL}" class="hover:text-pink-lighter">${SUPPORT_EMAIL}</a>""`});
