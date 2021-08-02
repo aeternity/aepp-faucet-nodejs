@@ -1,0 +1,6 @@
+.envrc
+node_modules
+test-account
+.vscode
+assets
+templates
