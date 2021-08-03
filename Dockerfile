@@ -23,8 +23,5 @@ COPY faucet.js .
 # building your code for production
 RUN npm ci --only=production
 
-# Bundle app source
-COPY . .
-
 # run the app
 CMD [ "node", "faucet.js"]
