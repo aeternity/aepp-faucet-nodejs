@@ -1,46 +1,19 @@
 version: 2.1
 
 executors:
-  node:
-    docker:
-      - image: cimg/node:15.14.0
-    working_directory: ~/app
   docker_builder:
     docker:
       - image: circleci/buildpack-deps:bionic
         user: root
-jobs:
-  build_frontend:
-    parameters:
-      FAUCET_ACCOUNT_PRIV_KEY:
-        type: string
-    executor: node
-    steps:
-      - checkout
-      - run:
-          working_directory: frontend
-          name: Npm Install and Prod
-          command: npm install && npm run prod
-      - persist_to_workspace:
-          root: /tmp/workspace
-          paths:
-            - ./assets
-            - ./templates
-            - ./package*.json
-            - faucet.js
-  build_production:
-    executor: node
-    steps:
-      - checkout
-      - run:
-          name: Npm Install Production
-          command: npm ci --only=production
-    
 
+references:
+  docker_parameters: &docker_parameters
+    DOCKERHUB_REPO:
+        type: string
+        
+commands:
   docker_build:
-    executor: docker_builder
-    environment:
-      DOCKERHUB_REPO: aeternity/aeternal-frontend
+    parameters: *docker_parameters
     steps:
       - checkout
       - setup_remote_docker:
@@ -48,24 +21,28 @@ jobs:
       - run:
           name: Build and push Docker image to DockerHub
           command: |
-            docker build -t test-faucet -f Dockerfile .
-  
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker build -t << parameters.DOCKERHUB_REPO >>:${CIRCLE_TAG:-master} -f nginx.Dockerfile .
+            docker push << parameters.DOCKERHUB_REPO >>:${CIRCLE_TAG:-master}
+jobs:          
+  docker_push_tag:
+    parameters: *docker_parameters
+    executor: docker_builder
+    steps:
+      - docker_build:
+          DOCKERHUB_REPO: << parameters.DOCKERHUB_REPO >>
 
 workflows:
   version: 2
   build_push:
     jobs:
-      - build_frontend:
-          FAUCET_ACCOUNT_PRIV_KEY: "test123"
-          filters:
-            tags:
-              only: /^v.*$/
-      - docker_build:
+      - docker_push_tag:
+          name: docker_push_tag
+          DOCKERHUB_REPO: "aeternity/aepp-faucet"
           context: ae-dockerhub
-          requires:
-            - build_frontend
           filters:
             branches:
-              ignore: /.*/
+              only:
+                - circleci-pipeline
             tags:
               only: /^v.*$/
