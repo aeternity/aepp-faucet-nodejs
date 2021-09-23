@@ -22,7 +22,7 @@ commands:
           name: Build and push Docker image to DockerHub
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker build -t << parameters.DOCKERHUB_REPO >>:${CIRCLE_TAG:-master} -f nginx.Dockerfile .
+            docker build -t << parameters.DOCKERHUB_REPO >>:${CIRCLE_TAG:-master} -f Dockerfile .
             docker push << parameters.DOCKERHUB_REPO >>:${CIRCLE_TAG:-master}
 jobs:          
   docker_push_tag:
