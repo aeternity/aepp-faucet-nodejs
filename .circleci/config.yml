@@ -43,6 +43,6 @@ workflows:
           filters:
             branches:
               only:
-                - circleci-pipeline
+                - master
             tags:
               only: /^v.*$/
