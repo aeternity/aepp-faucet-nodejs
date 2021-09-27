@@ -17,7 +17,7 @@ COPY --from=frontend /app/assets ./assets
 # copy generated index page
 COPY --from=frontend /app/templates ./templates
 # copy package.json & package-lock.json
-COPY package*.json .
+COPY package*.json ./
 # copy node files
 COPY faucet.js .
 # building your code for production
