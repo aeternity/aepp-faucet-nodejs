@@ -6,6 +6,9 @@ on:
       - master
     tags:
       - 'v*'
+  pull_request:
+    branches:
+      - master
 
 jobs:
   main:
@@ -30,6 +33,8 @@ jobs:
           images: aeternity/aepp-faucet
           tags: |
             type=ref,event=tag
+          flavor: |
+            latest=auto
 
       - name: Build and push Docker image
         id: build_push
