@@ -34,6 +34,7 @@ jobs:
           tags: |
             type=raw,value=latest,enable=${{ endsWith(GitHub.ref, 'master') }}
             type=ref,event=tag
+            type=ref,event=pr
           flavor: |
             latest=false
 
