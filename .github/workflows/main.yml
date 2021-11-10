@@ -32,11 +32,8 @@ jobs:
         with:
           images: aeternity/aepp-faucet
           tags: |
-            type=raw,value=latest,enable=${{ endsWith(GitHub.ref, 'master') }}
+            type=raw,value=master,enable=${{ endsWith(GitHub.ref, 'master') }}
             type=ref,event=tag
-            type=ref,event=pr
-          flavor: |
-            latest=false
 
       - name: Build and push Docker image
         id: build_push
