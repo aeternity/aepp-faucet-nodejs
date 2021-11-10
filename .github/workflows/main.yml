@@ -34,6 +34,8 @@ jobs:
           tags: |
             type=raw,value=master,enable=${{ endsWith(GitHub.ref, 'master') }}
             type=ref,event=tag
+          flavor: |
+            latest=true
 
       - name: Build and push Docker image
         id: build_push
