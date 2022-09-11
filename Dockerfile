@@ -1,5 +1,5 @@
 # front-end build
-FROM node:15 AS frontend
+FROM node:16 AS frontend
 
 COPY ./frontend /app
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 RUN npm install && npm run prod
 
 # actual build
-FROM node:15
+FROM node:16
 
 # use app directory
 WORKDIR /app
