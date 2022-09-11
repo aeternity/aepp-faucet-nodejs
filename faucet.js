@@ -82,6 +82,7 @@ const run = async () => {
     });
 
     // top up address
+    let previousSpendPromise = Promise.resolve();
     app.post('/account/:recipient_address', async (req, res) => {
         const address = req.params.recipient_address;
         try {
@@ -106,7 +107,9 @@ const run = async () => {
                 return;
             }
             addressCache.set(address, DateTime.now());
-            const tx = await client.spend(AmountFormatter.toAettos(TOPUP_AMOUNT), address, { payload: SPEND_TX_PAYLOAD });
+            previousSpendPromise = previousSpendPromise.catch(() => {}).then(() => client
+                .spend(AmountFormatter.toAettos(TOPUP_AMOUNT), address, { payload: SPEND_TX_PAYLOAD }));
+            const tx = await previousSpendPromise;
             logger.info(`Top up address ${address} with ${TOPUP_AMOUNT} AE tx_hash: ${tx.hash} completed.`);
             logger.debug(JSON.stringify(tx));
             const newBalance = await client.getBalance(address);

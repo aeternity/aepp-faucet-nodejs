@@ -1,0 +1,10 @@
+version: '3'
+services:
+  faucet:
+    image: aepp-faucet-nodejs
+    build: ..
+    ports: ["5001:5000"]
+    environment:
+      - FAUCET_ACCOUNT_PRIV_KEY=bf66e1c256931870908a649572ed0257876bb84e3cdf71efb12f56c7335fad54d5cf08400e988222f26eb4b02c8f89077457467211a6e6d955edb70749c6a33b
+      - TOPUP_AMOUNT=0.01
+      - SPEND_TX_PAYLOAD=Test Faucet Tx
