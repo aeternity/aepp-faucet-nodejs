@@ -4,7 +4,7 @@ const mustache = require('mustache-express');
 const winston = require('winston');
 const NodeCache = require('node-cache');
 const { DateTime } = require("luxon");
-const { Universal, AmountFormatter, Crypto, MemoryAccount, Node } = require('@aeternity/aepp-sdk');
+const { AeSdk, toAettos, toAe, getAddressFromPriv, MemoryAccount, Node, isAddressValid } = require('@aeternity/aepp-sdk');
 
 const app = express();
 
@@ -34,7 +34,7 @@ const SERVER_LISTEN_PORT = process.env.SERVER_LISTEN_PORT || 5000;
 
 const KEYPAIR = {
     secretKey: FAUCET_ACCOUNT_PRIV_KEY,
-    publicKey: Crypto.getAddressFromPriv(FAUCET_ACCOUNT_PRIV_KEY)
+    publicKey: getAddressFromPriv(FAUCET_ACCOUNT_PRIV_KEY)
 };
 
 const logger = winston.createLogger({
@@ -54,19 +54,11 @@ const addressCache = new NodeCache({
     checkperiod: 60
 });
 
-const initClient = async () => {
-    const node = await Node({ url: NODE_URL });
-    return Universal({
-        nodes: [
-            { name: 'node', instance: node },
-        ],
-        accounts: [MemoryAccount({ keypair: KEYPAIR })],
-    });
-};
-
 const run = async () => {
-    // initialize SDK
-    const client = await initClient();
+    const aeSdk = new AeSdk({
+        nodes: [{ name: 'node', instance: new Node(NODE_URL) }],
+    });
+    await aeSdk.addAccount(new MemoryAccount({ keypair: KEYPAIR }), { select: true });
 
     // set up mustache templating
     app.engine('mustache', mustache());
@@ -88,7 +80,7 @@ const run = async () => {
         try {
             logger.info(`Top up request for ${address}`);
             // validate address
-            if(!Crypto.isAddressValid(address)) {
+            if (!isAddressValid(address)) {
                 const message = `The provided address is not valid: ${address}`;
                 logger.error(message);
                 res.status(400);
@@ -100,19 +92,18 @@ const run = async () => {
             if(topUpDate) {
                 const graylistExpDate = topUpDate.plus({seconds: CACHE_MAX_AGE});
                 const delta = graylistExpDate.diffNow().toFormat("h'h' mm'm' ss's'");
-                const message = `The address ${address} is graylisted for another ${delta}`;;
+                const message = `The address ${address} is graylisted for another ${delta}`;
                 logger.warn(message);
                 res.status(425);
                 res.send({message});
                 return;
             }
             addressCache.set(address, DateTime.now());
-            previousSpendPromise = previousSpendPromise.catch(() => {}).then(() => client
-                .spend(AmountFormatter.toAettos(TOPUP_AMOUNT), address, { payload: SPEND_TX_PAYLOAD }));
+            previousSpendPromise = previousSpendPromise.catch(() => {}).then(() => aeSdk
+                .spend(toAettos(TOPUP_AMOUNT), address, { payload: SPEND_TX_PAYLOAD }));
             const tx = await previousSpendPromise;
             logger.info(`Top up address ${address} with ${TOPUP_AMOUNT} AE tx_hash: ${tx.hash} completed.`);
-            logger.debug(JSON.stringify(tx));
-            const newBalance = await client.getBalance(address);
+            const newBalance = await aeSdk.getBalance(address);
             res.send({tx_hash: tx.hash, balance: newBalance});
         } catch (err) {
             logger.error(`Generic error: top up account ${address} of ${TOPUP_AMOUNT} AE on ${NODE_URL.replace('https://', '')} failed with error.`, err);
@@ -124,8 +115,8 @@ const run = async () => {
     app.listen(SERVER_LISTEN_PORT, SERVER_LISTEN_ADDRESS, async () => {
         logger.info(`Faucet listening at http://${SERVER_LISTEN_ADDRESS}:${SERVER_LISTEN_PORT}`);
         logger.info(`Faucet Address: ${KEYPAIR.publicKey}`);
-        const balance = await client.getBalance(KEYPAIR.publicKey);
-        logger.info(`Faucet Balance: ${AmountFormatter.toAe(balance)} AE`);
+        const balance = await aeSdk.getBalance(KEYPAIR.publicKey);
+        logger.info(`Faucet Balance: ${toAe(balance)} AE`);
         logger.info(`Log-level: ${FAUCET_LOG_LEVEL}`);
     });
 }
