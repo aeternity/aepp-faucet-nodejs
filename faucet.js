@@ -116,6 +116,7 @@ const run = async () => {
             res.send({tx_hash: tx.hash, balance: newBalance});
         } catch (err) {
             logger.error(`Generic error: top up account ${address} of ${TOPUP_AMOUNT} AE on ${NODE_URL.replace('https://', '')} failed with error.`, err);
+            res.status(500);
             res.send({message: `""Unknown error, please contact <a href="${SUPPORT_EMAIL}" class="hover:text-pink-lighter">${SUPPORT_EMAIL}</a>""`});
         }
     });
