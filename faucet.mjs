@@ -78,6 +78,12 @@ app.get('/', (req, res) => {
     res.render('index', {amount: `${TOPUP_AMOUNT} AE`, node: NODE_URL, explorer_url: EXPLORER_URL});
 });
 
+let nonce;
+async function fetchNonce() {
+    nonce = (await aeSdk.api.getAccountNextNonce(await aeSdk.address())).nextNonce;
+}
+await fetchNonce();
+
 // top up address
 let previousSpendPromise = Promise.resolve();
 app.post('/account/:recipient_address', async (req, res) => {
@@ -104,8 +110,13 @@ app.post('/account/:recipient_address', async (req, res) => {
             return;
         }
         addressCache.set(address, DateTime.now());
-        previousSpendPromise = previousSpendPromise.catch(() => {}).then(() => aeSdk
-            .spend(toAettos(TOPUP_AMOUNT), address, { payload: SPEND_TX_PAYLOAD }));
+        previousSpendPromise = previousSpendPromise
+            .catch(fetchNonce)
+            .then(() => aeSdk.spend(
+                toAettos(TOPUP_AMOUNT),
+                address,
+                { payload: SPEND_TX_PAYLOAD, nonce: nonce++, verify: false },
+            ));
         const tx = await previousSpendPromise;
         logger.info(`Top up address ${address} with ${TOPUP_AMOUNT} AE tx_hash: ${tx.hash} completed.`);
         const newBalance = await aeSdk.getBalance(address);
