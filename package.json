@@ -2,7 +2,7 @@
   "name": "aepp-faucet",
   "version": "1.0.0",
   "description": "Send Online Top-up. Instant Account Recharge",
-  "main": "faucet.js",
+  "main": "faucet.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

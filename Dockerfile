@@ -24,7 +24,7 @@ COPY --from=frontend /app/assets ./assets
 # copy generated index page
 COPY --from=frontend /app/templates ./templates
 # copy node files
-COPY faucet.js .
+COPY faucet.mjs .
 
 # run the app
-CMD [ "node", "faucet.js"]
+CMD [ "node", "faucet.mjs"]
