@@ -1,4 +1,4 @@
-name: Production Aepp Faucet Nodejs Pipeline Pipeline
+name: Production Aepp Faucet Nodejs Pipeline
 
 on:
   push:
@@ -12,7 +12,7 @@ env:
 jobs:
   main:
     runs-on: ubuntu-latest
-    name: Production Aepp Faucet Nodejs Pipeline Pipeline
+    name: Production Aepp Faucet Nodejs Pipeline
     steps:
       - uses: actions/checkout@v2
         with:

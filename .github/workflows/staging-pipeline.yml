@@ -1,4 +1,4 @@
-name: Staging Aepp Faucet Nodejs Pipeline Pipeline
+name: Staging Aepp Faucet Nodejs Pipeline
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ env:
 jobs:
   main:
     runs-on: ubuntu-latest    
-    name: Staging Aepp Faucet Nodejs Pipeline Pipeline
+    name: Staging Aepp Faucet Nodejs Pipeline
     steps:
       - uses: actions/checkout@v3
         with:
