@@ -4,7 +4,6 @@ DOCKER_IMAGE ?= aeternity/aepp-faucet
 K8S_DEPLOYMENT ?= aepp-faucet
 K8S_NAMESPACE ?= testnet
 DOCKER_TAG ?= $(shell git describe --always)
-FAUCET_ACCOUNT_PRIV_KEY=f3eae3b2a06c86d797411c390335c7e8723ca9f8c9a595f75e78be8afac139f6e132b8f1ddb7a04e63b7fa96479a54bbc525a531a7f1bc0ce492121903067fb0
 # build paramters
 OS = linux
 ARCH = amd64
