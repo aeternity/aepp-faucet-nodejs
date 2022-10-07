@@ -59,10 +59,6 @@ jobs:
           images: aeternity/aepp-faucet-nodejs
           tags: |
             type=raw,value=latest,enable=${{ endsWith(GitHub.ref, 'main') }}
-            type=raw,value=main,enable=${{ endsWith(GitHub.ref, 'main') }}
-            type=raw,value=${{ steps.release.outputs.tag_name }},enable=${{ endsWith(GitHub.ref, 'main') }}
-            type=ref,event=tag
-            type=ref,event=pr
 
       - name: Build and push docker image
         if: |
@@ -99,7 +95,7 @@ jobs:
         uses: aeternity/ae-github-actions/argocd-pr-sync@v4
         with:
           git-sha: ${{ steps.git-sha.outputs.git-sha }}
-          url-prefix: main
+          url-prefix: latest
           env: ${{ env.ENV }}
           app: ${{ env.APP }}
 
