@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - main
-  release:
-    types: [created]
-
+      
 env:
   ENV: "prd"
   APP: "aepp-faucet-nodejs"
@@ -102,17 +100,9 @@ jobs:
           repository: aeternity/gitops-apps.git
           ref: prd
           persist-credentials: false
-          fetch-depth: 0
-
-      - name: Production Deploy
-        if: ${{ steps.release.outputs.release_created }}
-        uses: aeternity/ae-github-actions/argocd-deploy@v4
-        with:
-          url-prefix: ${{ steps.release.outputs.tag_name }}
-          env: ${{ env.ENV }}
-          app: ${{ env.APP }}
+          fetch-depth: 0      
       
-      - name: Latest Main Deploy on Push
+      - name: Production Deploy
         if: github.event_name == 'push'
         uses: aeternity/ae-github-actions/argocd-pr-sync@v4
         with:
