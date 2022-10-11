@@ -6,6 +6,7 @@ import winston from 'winston';
 import NodeCache from 'node-cache';
 import { DateTime } from 'luxon';
 import { AeSdk, toAettos, toAe, getAddressFromPriv, MemoryAccount, Node, isAddressValid } from '@aeternity/aepp-sdk/es/index.mjs';
+import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -64,6 +65,8 @@ await aeSdk.addAccount(
     { select: true },
 );
 const app = express();
+
+app.use(cors());
 
 // set up mustache templating
 app.engine('mustache', mustache());
