@@ -5,7 +5,9 @@ import mustache from 'mustache-express';
 import winston from 'winston';
 import NodeCache from 'node-cache';
 import { DateTime } from 'luxon';
-import { AeSdk, toAettos, toAe, getAddressFromPriv, MemoryAccount, Node, isAddressValid } from '@aeternity/aepp-sdk/es/index.mjs';
+import {
+    AeSdk, toAettos, toAe, MemoryAccount, Node, isAddressValid, encode, Encoding,
+} from '@aeternity/aepp-sdk';
 import cors from 'cors';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -54,16 +56,8 @@ const addressCache = new NodeCache({
 
 const aeSdk = new AeSdk({
     nodes: [{ name: 'node', instance: new Node(NODE_URL) }],
+    accounts: [new MemoryAccount(FAUCET_ACCOUNT_PRIV_KEY)],
 });
-await aeSdk.addAccount(
-    new MemoryAccount({
-        keypair: {
-            secretKey: FAUCET_ACCOUNT_PRIV_KEY,
-            publicKey: getAddressFromPriv(FAUCET_ACCOUNT_PRIV_KEY)
-        },
-    }),
-    { select: true },
-);
 const app = express();
 
 app.use(cors());
@@ -83,7 +77,7 @@ app.get('/', (req, res) => {
 
 let nonce;
 async function fetchNonce() {
-    nonce = (await aeSdk.api.getAccountNextNonce(await aeSdk.address())).nextNonce;
+    nonce = (await aeSdk.api.getAccountNextNonce(aeSdk.address)).nextNonce;
 }
 await fetchNonce();
 
@@ -115,11 +109,11 @@ app.post('/account/:recipient_address', async (req, res) => {
         addressCache.set(address, DateTime.now());
         previousSpendPromise = previousSpendPromise
             .catch(fetchNonce)
-            .then(() => aeSdk.spend(
-                toAettos(TOPUP_AMOUNT),
-                address,
-                { payload: SPEND_TX_PAYLOAD, nonce: nonce++, verify: false },
-            ));
+            .then(() => aeSdk.spend(toAettos(TOPUP_AMOUNT), address, {
+                payload: encode(Buffer.from(SPEND_TX_PAYLOAD), Encoding.Bytearray),
+                nonce: nonce++,
+                verify: false,
+            }));
         const tx = await previousSpendPromise;
         logger.info(`Top up address ${address} with ${TOPUP_AMOUNT} AE tx_hash: ${tx.hash} completed.`);
         const newBalance = await aeSdk.getBalance(address);
@@ -138,7 +132,6 @@ await new Promise((resolve, reject) => app.listen(
 ));
 
 logger.info(`Faucet listening at http://${SERVER_LISTEN_ADDRESS}:${SERVER_LISTEN_PORT}`);
-logger.info(`Faucet Address: ${await aeSdk.address()}`);
-const balance = await aeSdk.getBalance(await aeSdk.address());
-logger.info(`Faucet Balance: ${toAe(balance)} AE`);
+logger.info(`Faucet Address: ${aeSdk.address}`);
+logger.info(`Faucet Balance: ${toAe(await aeSdk.getBalance(aeSdk.address))} AE`);
 logger.info(`Log-level: ${FAUCET_LOG_LEVEL}`);
