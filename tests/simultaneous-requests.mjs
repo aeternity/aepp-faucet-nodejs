@@ -1,4 +1,4 @@
-import { generateKeyPair } from '@aeternity/aepp-sdk/es/index.mjs';
+import { generateKeyPair } from '@aeternity/aepp-sdk';
 import fetch from 'cross-fetch';
 import assert from 'assert';
 
