@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-function showResult(resultEl) {
+function showResult (resultEl) {
   const className = 'hidden'
   if (resultEl.classList) {
     resultEl.classList.remove('hidden', 'lg:hidden')
@@ -9,14 +9,13 @@ function showResult(resultEl) {
   }
 }
 
-function passQueryAccountAddressToInput(inputEl) {
+function passQueryAccountAddressToInput (inputEl) {
   const urlParams = new URLSearchParams(window.location.search)
   const address = urlParams.get('address')
   if (address) {
     inputEl.value = address
   }
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('#faucetForm')
@@ -55,4 +54,4 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(error)
       })
   })
-});
+})
