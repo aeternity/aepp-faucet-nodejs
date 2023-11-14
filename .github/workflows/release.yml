@@ -6,10 +6,10 @@ on:
 
 jobs:
   publish:
-    uses: aeternity/github-actions/.github/workflows/_publish-docker.yml@v1.2.0
+    uses: aeternity/github-actions/.github/workflows/_publish-docker.yml@v2.0.0
     secrets: inherit
   deploy:
-    uses: aeternity/github-actions/.github/workflows/_deploy-gitops.yml@v1.2.0
+    uses: aeternity/github-actions/.github/workflows/_deploy-gitops.yml@v2.0.0
     needs: [publish]
     secrets: inherit
     with:
