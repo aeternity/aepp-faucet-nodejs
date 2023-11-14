@@ -16,3 +16,4 @@ jobs:
       DEPLOY_ENV: prd
       DEPLOY_APP: aepp-faucet
       DEPLOY_TAG: ${{ github.ref_name }}
+      DEPLOY_SUBDOMAIN: "faucet"
