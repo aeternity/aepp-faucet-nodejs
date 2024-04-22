@@ -26,7 +26,7 @@ const TOPUP_AMOUNT = process.env.TOPUP_AMOUNT || '5';
 const SPEND_TX_PAYLOAD = process.env.SPEND_TX_PAYLOAD || 'Faucet Tx';
 // node, explorer & support
 const NODE_URL = process.env.NODE_URL || 'https://testnet.aeternity.io';
-const EXPLORER_URL = process.env.EXPLORER_URL || 'https://explorer.testnet.aeternity.io';
+const EXPLORER_URL = process.env.EXPLORER_URL || 'https://testnet.aescan.io';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'aepp-dev@aeternity.com';
 // graylisting
 const CACHE_MAX_SIZE = process.env.CACHE_MAX_SIZE || 6000;
