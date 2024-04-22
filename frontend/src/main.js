@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     axios.post('/account/' + account)
       .then(function (response) {
-        resultEl.innerHTML = `<strong>Added ${amount}!</strong><br>
+        resultEl.innerHTML = `<strong>Added ${amount} AE!</strong><br>
         <br>Transaction: <a class="text-purple font-mono text-xs" href="${explorerURL}/transactions/${response.data.tx_hash}" target="_blank">${response.data.tx_hash}</a><br>
         <br>Account: <a class="text-purple font-mono text-xs" href="${explorerURL}/accounts/${account}" target="_blank">${account}</a>
         <br>Balance: <strong> ${(response.data.balance / 1000000000000000000)} AE </strong><br>`

@@ -68,7 +68,7 @@ app.use('/assets', express.static(path.resolve('assets')));
 
 // serve frontend
 app.get('/', (req, res) => {
-    res.render('index', {amount: `${TOPUP_AMOUNT} AE`, node: NODE_URL, explorer_url: EXPLORER_URL});
+    res.render('index', {amount: TOPUP_AMOUNT, node: NODE_URL, explorer_url: EXPLORER_URL});
 });
 
 let nonce;
