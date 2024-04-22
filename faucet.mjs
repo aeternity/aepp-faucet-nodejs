@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'url';
 import path from 'path';
 import express from 'express';
 import mustache from 'mustache-express';
@@ -9,9 +8,6 @@ import {
     AeSdk, toAettos, toAe, MemoryAccount, Node, isAddressValid, encode, Encoding,
 } from '@aeternity/aepp-sdk';
 import cors from 'cors';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const setRequiredVariable = (variableName) => {
     if (process.env[variableName]) {
@@ -65,10 +61,10 @@ app.use(cors());
 // set up mustache templating
 app.engine('mustache', mustache());
 app.set('view engine', 'mustache');
-app.set('views', `${__dirname}/templates`);
+app.set('views', path.resolve('templates'));
 
 // static assets
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/assets', express.static(path.resolve('assets')));
 
 // serve frontend
 app.get('/', (req, res) => {
