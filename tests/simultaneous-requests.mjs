@@ -1,5 +1,4 @@
 import { generateKeyPair } from '@aeternity/aepp-sdk';
-import fetch from 'cross-fetch';
 import assert from 'assert';
 
 const addresses = new Array(5).fill().map(() => generateKeyPair().publicKey);

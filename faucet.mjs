@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'url';
 import path from 'path';
 import express from 'express';
 import mustache from 'mustache-express';
@@ -9,9 +8,6 @@ import {
     AeSdk, toAettos, toAe, MemoryAccount, Node, isAddressValid, encode, Encoding,
 } from '@aeternity/aepp-sdk';
 import cors from 'cors';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const setRequiredVariable = (variableName) => {
     if (process.env[variableName]) {
@@ -26,7 +22,7 @@ const TOPUP_AMOUNT = process.env.TOPUP_AMOUNT || '5';
 const SPEND_TX_PAYLOAD = process.env.SPEND_TX_PAYLOAD || 'Faucet Tx';
 // node, explorer & support
 const NODE_URL = process.env.NODE_URL || 'https://testnet.aeternity.io';
-const EXPLORER_URL = process.env.EXPLORER_URL || 'https://explorer.testnet.aeternity.io';
+const EXPLORER_URL = process.env.EXPLORER_URL || 'https://testnet.aescan.io';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'aepp-dev@aeternity.com';
 // graylisting
 const CACHE_MAX_SIZE = process.env.CACHE_MAX_SIZE || 6000;
@@ -65,14 +61,14 @@ app.use(cors());
 // set up mustache templating
 app.engine('mustache', mustache());
 app.set('view engine', 'mustache');
-app.set('views', `${__dirname}/templates`);
+app.set('views', path.resolve('templates'));
 
 // static assets
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/assets', express.static(path.resolve('assets')));
 
 // serve frontend
 app.get('/', (req, res) => {
-    res.render('index', {amount: `${TOPUP_AMOUNT} AE`, node: NODE_URL, explorer_url: EXPLORER_URL});
+    res.render('index', {amount: TOPUP_AMOUNT, node: NODE_URL, explorer_url: EXPLORER_URL});
 });
 
 let nonce;
@@ -135,3 +131,6 @@ logger.info(`Faucet listening at http://${SERVER_LISTEN_ADDRESS}:${SERVER_LISTEN
 logger.info(`Faucet Address: ${aeSdk.address}`);
 logger.info(`Faucet Balance: ${toAe(await aeSdk.getBalance(aeSdk.address))} AE`);
 logger.info(`Log-level: ${FAUCET_LOG_LEVEL}`);
+
+process.on('SIGINT', () => app.close());
+process.on('SIGTERM', () => app.close());

@@ -1,5 +1,5 @@
 # front-end build
-FROM node:16 AS frontend
+FROM node:20-alpine AS frontend
 
 WORKDIR /app
 
@@ -7,10 +7,10 @@ COPY ./frontend/package*.json ./
 RUN npm ci
 
 COPY ./frontend ./
-RUN npm run prod
+RUN NODE_OPTIONS=--openssl-legacy-provider npm run prod
 
 # actual build
-FROM node:16
+FROM node:20-alpine
 
 # use app directory
 WORKDIR /app

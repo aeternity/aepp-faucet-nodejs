@@ -4,6 +4,13 @@ Send Online Top-up. Instant Account Recharge
 
 Recharge your account on the Aeternity Testnet
 
+## Provide address in URL
+
+If you navigate the user to the faucet from a wallet, it would be friendly to substitute the user's address into the form. Use `address` query parameter for that. For example,
+```
+https://faucet.aepps.com/?address=ak_21A27UVVt3hDkBE5J7rhhqnH5YNb4Y1dqo4PnSybrH85pnWo7E
+```
+
 ## Configuration
 
 Configuring Faucet application via environment variable:
