@@ -135,3 +135,6 @@ logger.info(`Faucet listening at http://${SERVER_LISTEN_ADDRESS}:${SERVER_LISTEN
 logger.info(`Faucet Address: ${aeSdk.address}`);
 logger.info(`Faucet Balance: ${toAe(await aeSdk.getBalance(aeSdk.address))} AE`);
 logger.info(`Log-level: ${FAUCET_LOG_LEVEL}`);
+
+process.on('SIGINT', () => app.close());
+process.on('SIGTERM', () => app.close());
