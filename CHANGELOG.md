@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/aeternity/aepp-faucet-nodejs/compare/v1.0.0...v1.1.0) (2024-04-23)
+
+
+### Features
+
+* Ceres compatibility by updating sdk to 13.3.2 ([35cf806](https://github.com/aeternity/aepp-faucet-nodejs/commit/35cf806cc55d352bf7ab7c420bce8d5ae85a4063))
+
+
+### Bug Fixes
+
+* don't duplicate AE suffix ([35cf806](https://github.com/aeternity/aepp-faucet-nodejs/commit/35cf806cc55d352bf7ab7c420bce8d5ae85a4063))
+
 ## 1.0.0 (2023-11-14)
 
 
