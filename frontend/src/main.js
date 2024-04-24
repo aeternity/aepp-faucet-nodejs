@@ -1,12 +1,3 @@
-function showResult (resultEl) {
-  const className = 'hidden'
-  if (resultEl.classList) {
-    resultEl.classList.remove('hidden', 'lg:hidden')
-  } else {
-    resultEl.className = resultEl.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ')
-  }
-}
-
 function passQueryAccountAddressToInput (inputEl) {
   const urlParams = new URLSearchParams(window.location.search)
   const address = urlParams.get('address')
@@ -29,14 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const amount = form.dataset.amount
     const explorerURL = form.dataset.explorerUrl
 
-    showResult(resultEl)
-
-    resultEl.innerHTML = `<div class="flex flex-col">
-      <img src="/assets/images/cycle-loader.svg" class="inline-block">
-      <div class="font-mono inline-block text-center mt-4">Adding ${amount} AE to:<br>
-        <strong class="mt-4 inline-block text-xs">${account}</strong>
-      </div>
-    </div>`
+    resultEl.style.display = 'block'
+    resultEl.classList.remove('error')
+    resultEl.innerHTML = `
+      <img src="/assets/images/cycle-loader.svg">
+      <span class="status">Adding ${amount} AE</span>
+      Account: <a href="${explorerURL}/accounts/${account}" target="_blank">${account}</a>`
 
     let response, json
     try {
@@ -44,13 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
       json = await response.json()
       if (response.status !== 200) throw new Error(`Unexpected response status: ${response.status}`)
       resultEl.innerHTML = `
-        <strong>Added ${amount} AE!</strong><br>
-        <br>Transaction: <a class="text-purple font-mono text-xs" href="${explorerURL}/transactions/${json.tx_hash}" target="_blank">${json.tx_hash}</a><br>
-        <br>Account: <a class="text-purple font-mono text-xs" href="${explorerURL}/accounts/${account}" target="_blank">${account}</a>
-        <br>Balance: <strong> ${json.balance / 1e18} AE </strong><br>`
+        <span class="status">Added ${amount} AE!</span>
+        Transaction: <a href="${explorerURL}/transactions/${json.tx_hash}" target="_blank">${json.tx_hash}</a><br>
+        Account: <a href="${explorerURL}/accounts/${account}" target="_blank">${account}</a><br>
+        Balance: ${json.balance / 1e18} AE<br>`
     } catch (error) {
+      resultEl.classList.add('error')
       resultEl.innerHTML = `
-        Something went wrong. ¯\\_(ツ)_/¯<br>
+        <span class="status">Something went wrong. ¯\\_(ツ)_/¯</span>
         ${(json && json.message) || error.message}<br>
         Please try again later.`
       console.warn(error)

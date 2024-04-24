@@ -1,4 +1,3 @@
-const webpack = require('webpack')
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -8,7 +7,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const mainJSPath = path.resolve(__dirname, './src', 'main.js')
 const mainCSSPath = path.resolve(__dirname, './src', 'main.css')
 const imagesPath = path.resolve(__dirname, './src/images')
-// const fontsPath = path.resolve(__dirname, './src/fonts')
 const publicPath = path.resolve(__dirname, './assets')
 
 module.exports = {
@@ -16,8 +14,7 @@ module.exports = {
     main: [
       mainJSPath,
       mainCSSPath
-    ] // ,
-    // vendor: []
+    ],
   },
   output: {
     filename:
@@ -33,12 +30,6 @@ module.exports = {
     }
   },
   plugins: [
-    // new webpack.optimize.AggressiveSplittingPlugin(js_split_options),
-    new webpack.ProvidePlugin({
-      // $: 'jquery',
-      // jQuery: 'jquery',
-      // objectFitImages: 'object-fit-images'
-    }),
     new CleanWebpackPlugin(
       {
         dry: false,
@@ -49,7 +40,6 @@ module.exports = {
     // Simply copy assets to dist folder
     new CopyWebpackPlugin([
       { from: imagesPath, to: 'images' }
-      // { from: fontsPath, to: 'fonts' }
     ]),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './src/index.html'),
@@ -63,11 +53,6 @@ module.exports = {
       ignoreOrder: false
     })
   ],
-  resolve: {
-    alias: {
-      // styles:  path.resolve(__dirname, '../src/sass'), // relative to the location of the webpack config file!
-    }
-  },
   module: {
     rules: [
       // ES2015 to ES5 compilation
@@ -89,21 +74,11 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              // you can specify a publicPath here
-              // by default it uses publicPath in webpackOptions.output
               publicPath: 'public/styles',
               hmr: process.env.NODE_ENV === 'dev'
             }
           },
           'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              config: {
-                path: 'postcss.config.js'
-              }
-            }
-          }
         ]
       }
     ]
