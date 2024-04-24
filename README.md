@@ -44,14 +44,13 @@ Configuring Faucet application via environment variable:
 - `TOPUP_AMOUNT` The amount of tokens that the faucet application will place into your account. (Default: 5AE)
 - `SPEND_TX_PAYLOAD` Value to use to fill the payload for the transactions (Default: `Faucet Tx`)
 - `NODE_URL` URL of the node that the faucet aepp is using. (Default: 'https://testnet.aeternity.io')
-- `EXPLORER_URL` URL of the explorer app (Default: 'https://testnet.aeternal.io')
+- `EXPLORER_URL` URL of the explorer app (Default: 'https://testnet.aescan.io')
 - `SUPPORT_EMAIL` Email to display for support requests (Default: `aepp-dev@aeternity.com`)
 
 ### Logging
 - `FAUCET_LOG_LEVEL` the winston log-level to use (Default: `info`)
 
 ### Server
-- `SERVER_LISTEN_ADDRESS` which address to listen to (Default: `0.0.0.0`)
 - `SERVER_LISTEN_PORT` on which port to listen (Default: `5000`)
 
 ## Development
@@ -60,9 +59,8 @@ This repository bundles a simple frontend and a node (express) based backend int
 
 To build and run it locally execute following commands in the root:
 ```
-make docker-build
-make docker-run
+npm install
+export FAUCET_ACCOUNT_PRIV_KEY=9ebd7beda0c79af72a42ece3821a56eff16359b6df376cf049aee995565f022f840c974b97164776454ba119d84edc4d6058a8dec92b6edc578ab2d30b4c4200
+export TOPUP_AMOUNT=0.01
+npm run dev
 ```
-
-### Notes:
-- The `frontend/index.html` is transformed into `index.mustache` in order to allow the node backend to provide dynamic values using the [Mustache](https://mustache.github.io/) template engine.

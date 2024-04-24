@@ -14,7 +14,7 @@ list:
 
 clean:
 	@echo remove generated folders
-	rm -rf frontend/templates frontend/assets frontend/node_modules node_modules
+	rm -rf dist node_modules
 	@echo done
 
 docker-build:

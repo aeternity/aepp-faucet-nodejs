@@ -1,6 +1,7 @@
 *
-!frontend
+!src
 !package.json
 !package-lock.json
-!*.config.js
-!faucet.mjs
+!server.ts
+!tsconfig.json
+!index.html

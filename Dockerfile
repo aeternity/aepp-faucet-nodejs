@@ -1,19 +1,20 @@
 FROM node:20-alpine AS frontend
 
 WORKDIR /app
-COPY ./frontend/package*.json ./
+COPY package*.json ./
 RUN npm ci
 
-COPY ./frontend ./
+COPY src src
+COPY tsconfig.json index.html ./
 RUN npm run build
 
 FROM node:20-alpine
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
-COPY --from=frontend /app/dist/assets ./assets
-COPY --from=frontend /app/dist/index.html ./templates/index.mustache
-COPY faucet.mjs .
+RUN npm ci --omit dev
+COPY --from=frontend /app/dist dist
+COPY server.ts .
+ENV NODE_ENV production
 
-CMD [ "node", "faucet.mjs"]
+CMD [ "npx", "tsx", "server.ts"]

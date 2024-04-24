@@ -1,16 +1,25 @@
 {
   "name": "aepp-faucet",
+  "private": true,
   "version": "1.1.0",
   "description": "Send Online Top-up. Instant Account Recharge",
-  "main": "faucet.mjs",
+  "type": "module",
+  "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx ./server.ts",
+    "build": "tsc && vite build",
+    "preview": "NODE_ENV=production tsx ./server.ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aeternity/aepp-faucet-nodejs.git"
   },
-  "author": "",
+  "keywords": [
+    "blockchain",
+    "aeternity",
+    "faucet"
+  ],
+  "author": "Enrico Icardi <enrico@welance.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/aeternity/aepp-faucet-nodejs/issues"
@@ -21,9 +30,15 @@
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "luxon": "^3.4.4",
-    "mustache-express": "^1.3.2",
     "node-cache": "^5.1.2",
+    "tsx": "^4.7.2",
+    "vite-express": "^0.16.0",
     "winston": "^3.13.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
   },
   "overrides": {
     "argon2": "^0.40.1"
