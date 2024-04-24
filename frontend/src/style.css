@@ -8,6 +8,18 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   display: flex;
   line-height: 1.5;
+
+  > div {
+    max-width: 1280px;
+    margin: auto;
+    width: 100%;
+    padding: 0 3rem;
+    box-sizing: border-box;
+
+    @media (max-width: 576px) {
+      padding: 0 0.5rem;
+    }
+  }
 }
 
 h1, h4 {
@@ -28,59 +40,51 @@ h4 {
 a {
   color: #ff0d6a;
   text-decoration: none;
-}
 
-a:hover {
-  text-decoration: underline;
-}
-
-body > div {
-  max-width: 1280px;
-  margin: auto;
-  width: 100%;
-  padding: 0 3rem;
-  box-sizing: border-box;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 form {
   margin-top: 2rem;
   display: flex;
-}
 
-form input, form button {
-  font-size: 100%;
-  height: 3rem;
-  line-height: 3rem;
-}
+  input, button {
+    font-size: 100%;
+    height: 3rem;
+    line-height: 3rem;
+  }
 
-form input {
-  flex-grow: 2;
-  border-radius: .25rem 0 0 .25rem;
-  margin: 0;
-  padding: 0;
-  border: none;
-  padding: 0 1rem;
-  background: #fbfbfb;
-  border: 1px solid #e2e8f0;
-  font-family: Menlo, Monaco, Consolas, "Liberation Mono", Courier New, monospace;
-}
+  input {
+    flex-grow: 2;
+    border-radius: .25rem 0 0 .25rem;
+    margin: 0;
+    padding: 0;
+    border: none;
+    padding: 0 1rem;
+    background: #fbfbfb;
+    border: 1px solid #e2e8f0;
+    font-family: Menlo, Monaco, Consolas, "Liberation Mono", Courier New, monospace;
 
-form input::placeholder {
-  color: #a0aec0;
-}
+    &::placeholder {
+      color: #a0aec0;
+    }
+  }
 
-form button {
-  padding: 1px;
-  flex-grow: 1;
-  background-color: #282a36;
-  border: none;
-  border-radius: 0 .25rem .25rem 0;
-  color: #ff0d6a;
-}
+  button {
+    padding: 1px;
+    flex-grow: 1;
+    background-color: #282a36;
+    border: none;
+    border-radius: 0 .25rem .25rem 0;
+    color: #ff0d6a;
 
-form button:hover {
-  text-decoration: underline;
-  background-color: #171921;
+    &:hover {
+      text-decoration: underline;
+      background-color: #171921;
+    }
+  }
 }
 
 #result {
@@ -91,26 +95,20 @@ form button:hover {
   border: 1px solid #e2e8f0;
   border-radius: .25rem;
   overflow: hidden;
-}
 
-#result img {
-  float: left;
-  margin: -.5rem 1rem 0 0;
-}
+  &:not(.error) {
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+  }
 
-#result:not(.error) {
-  text-overflow: ellipsis;
-  text-wrap: nowrap;
-}
+  img {
+    float: left;
+    margin: -.5rem 1rem 0 0;
+  }
 
-#result .status {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-
-@media (max-width: 576px) {
-  body > div {
-    padding: 0 0.5rem;
+  .status {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 1rem;
   }
 }
