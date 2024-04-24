@@ -1,5 +1,3 @@
-import axios from 'axios'
-
 function showResult (resultEl) {
   const className = 'hidden'
   if (resultEl.classList) {
@@ -24,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   passQueryAccountAddressToInput(recipientEl)
 
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault()
 
     const account = recipientEl.value
@@ -40,18 +38,22 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     </div>`
 
-    axios.post('/account/' + account)
-      .then(function (response) {
-        resultEl.innerHTML = `<strong>Added ${amount} AE!</strong><br>
-        <br>Transaction: <a class="text-purple font-mono text-xs" href="${explorerURL}/transactions/${response.data.tx_hash}" target="_blank">${response.data.tx_hash}</a><br>
+    let response, json
+    try {
+      response = await window.fetch(`/account/${account}`, { method: 'POST' })
+      json = await response.json()
+      if (response.status !== 200) throw new Error(`Unexpected response status: ${response.status}`)
+      resultEl.innerHTML = `
+        <strong>Added ${amount} AE!</strong><br>
+        <br>Transaction: <a class="text-purple font-mono text-xs" href="${explorerURL}/transactions/${json.tx_hash}" target="_blank">${json.tx_hash}</a><br>
         <br>Account: <a class="text-purple font-mono text-xs" href="${explorerURL}/accounts/${account}" target="_blank">${account}</a>
-        <br>Balance: <strong> ${(response.data.balance / 1000000000000000000)} AE </strong><br>`
-      })
-      .catch(function (error) {
-        resultEl.innerHTML = `Something went wrong. ¯\\_(ツ)_/¯<br>
-        ${error.response.data.message}<br>
+        <br>Balance: <strong> ${json.balance / 1e18} AE </strong><br>`
+    } catch (error) {
+      resultEl.innerHTML = `
+        Something went wrong. ¯\\_(ツ)_/¯<br>
+        ${(json && json.message) || error.message}<br>
         Please try again later.`
-        console.log(error)
-      })
+      console.warn(error)
+    }
   })
 })
