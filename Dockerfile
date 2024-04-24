@@ -5,15 +5,15 @@ COPY ./frontend/package*.json ./
 RUN npm ci
 
 COPY ./frontend ./
-RUN NODE_OPTIONS=--openssl-legacy-provider npm run prod
+RUN npm run build
 
 FROM node:20-alpine
 
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
-COPY --from=frontend /app/assets ./assets
-COPY --from=frontend /app/templates ./templates
+COPY --from=frontend /app/dist/assets ./assets
+COPY --from=frontend /app/dist/index.html ./templates/index.mustache
 COPY faucet.mjs .
 
 CMD [ "node", "faucet.mjs"]
