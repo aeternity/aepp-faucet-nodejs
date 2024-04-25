@@ -5,6 +5,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY src src
+COPY public public
 COPY tsconfig.json index.html ./
 RUN npm run build
 
