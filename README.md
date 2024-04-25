@@ -47,9 +47,6 @@ Configuring Faucet application via environment variable:
 - `EXPLORER_URL` URL of the explorer app (Default: 'https://testnet.aescan.io')
 - `SUPPORT_EMAIL` Email to display for support requests (Default: `aepp-dev@aeternity.com`)
 
-### Logging
-- `FAUCET_LOG_LEVEL` the winston log-level to use (Default: `info`)
-
 ### Server
 - `SERVER_LISTEN_PORT` on which port to listen (Default: `5000`)
 
