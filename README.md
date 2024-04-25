@@ -11,6 +11,31 @@ If you navigate the user to the faucet from a wallet, it would be friendly to su
 https://faucet.aepps.com/?address=ak_21A27UVVt3hDkBE5J7rhhqnH5YNb4Y1dqo4PnSybrH85pnWo7E
 ```
 
+## JSON API
+
+Instead of using web UI, you can make a POST request to `https://faucet.aepps.com/account/<address>`. It will respond with a JSON containing transaction hash and an increased balance (in aettos)
+```json
+{
+  "tx_hash": "th_dxhmrcJY4bdqQrj5ZP1zBsuuKz4v4oyPNSqNS6TwTimPuJ3af",
+  "balance": "10000000000000000000"
+}
+```
+
+If you did top-up recently, you may get an error (425 code)
+```json
+{
+  "message": "The address ak_21A27UVVt3hDkBE5J7rhhqnH5YNb4Y1dqo4PnSybrH85pnWo7E is graylisted for another 2h 59m 24s"
+}
+```
+
+An example of requesting faucet using `fetch` API in JavaScript
+```js
+const address = 'ak_21A27UVVt3hDkBE5J7rhhqnH5YNb4Y1dqo4PnSybrH85pnWo7E';
+const url = `https://faucet.aepps.com/account/${address}`;
+const { status } = await fetch(url, { method: 'POST' });
+if (status !== 200) throw new Error(`Unexpected faucet response code: ${status}`);
+```
+
 ## Configuration
 
 Configuring Faucet application via environment variable:
