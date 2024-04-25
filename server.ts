@@ -1,7 +1,6 @@
 import express from 'express';
 import ViteExpress from 'vite-express';
 import winston from 'winston';
-import NodeCache from 'node-cache';
 import {
   AeSdk, toAettos, toAe, MemoryAccount, Node, isAddressValid, encode, Encoding,
 } from '@aeternity/aepp-sdk';
@@ -16,9 +15,6 @@ const SPEND_TX_PAYLOAD = process.env.SPEND_TX_PAYLOAD || 'Faucet Tx';
 const NODE_URL = process.env.NODE_URL || 'https://testnet.aeternity.io';
 const EXPLORER_URL = process.env.EXPLORER_URL || 'https://testnet.aescan.io';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'aepp-dev@aeternity.com';
-// graylisting
-const CACHE_MAX_SIZE = getNumberVariable('CACHE_MAX_SIZE', 6000);
-const CACHE_MAX_AGE = getNumberVariable('CACHE_MAX_AGE', 3600 * 4); // default 4h
 // logging
 const FAUCET_LOG_LEVEL = process.env.FAUCET_LOG_LEVEL || 'info';
 // server
@@ -35,11 +31,13 @@ const logger = winston.createLogger({
   transports: [new winston.transports.Console()]
 });
 
-const addressCache = new NodeCache({
-  maxKeys: CACHE_MAX_SIZE,
-  stdTTL: CACHE_MAX_AGE,
-  checkperiod: 60
-});
+const grayList = new Map<string, Date>();
+setInterval(() => {
+  grayList.forEach((date, address) => {
+    if (date > new Date()) return;
+    grayList.delete(address);
+  });
+}, 1000 * 60);
 
 const aeSdk = new AeSdk({
   nodes: [{ name: 'node', instance: new Node(NODE_URL) }],
@@ -70,15 +68,15 @@ app.post('/account/:recipient_address', async (req, res) => {
       return;
     }
     // check if address is still in cache
-    const graylistExpDate = addressCache.get<Date>(address);
-    if (graylistExpDate) {
-      const message = `The address ${address} is graylisted for another ${timeAgo(graylistExpDate)}`;
+    const grayListTtl = grayList.get(address);
+    if (grayListTtl) {
+      const message = `The address ${address} is graylisted for another ${timeAgo(grayListTtl)}`;
       logger.warn(message);
       res.status(425);
       res.send({ message });
       return;
     }
-    addressCache.set<Date>(address, new Date(Date.now() + 1000 * CACHE_MAX_AGE));
+    grayList.set(address, new Date(Date.now() + 1000 * 60 * 60 * 4));
     previousSpendPromise = (previousSpendPromise ?? Promise.resolve())
       .catch(fetchNonce)
       .then(() => aeSdk.spend(toAettos(TOPUP_AMOUNT), address, {
