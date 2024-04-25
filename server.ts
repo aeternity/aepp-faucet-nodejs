@@ -2,23 +2,11 @@ import express from 'express';
 import ViteExpress from 'vite-express';
 import winston from 'winston';
 import NodeCache from 'node-cache';
-import { DateTime } from 'luxon';
 import {
   AeSdk, toAettos, toAe, MemoryAccount, Node, isAddressValid, encode, Encoding,
 } from '@aeternity/aepp-sdk';
 import cors from 'cors';
-
-const getRequiredVariable = (variableName): string => {
-  const value = process.env[variableName];
-  if (value) return value;
-  throw new Error(`ENV-variable missing: ${variableName}`);
-}
-
-const getNumberVariable = (variableName: string, def: number): number => {
-  const value = process.env[variableName];
-  if (value) return +value;
-  return def;
-}
+import { timeAgo, getRequiredVariable, getNumberVariable } from './utils.ts';
 
 // faucet transactions
 const FAUCET_ACCOUNT_PRIV_KEY = getRequiredVariable('FAUCET_ACCOUNT_PRIV_KEY');
@@ -82,17 +70,15 @@ app.post('/account/:recipient_address', async (req, res) => {
       return;
     }
     // check if address is still in cache
-    const topUpDate = addressCache.get<DateTime>(address);
-    if (topUpDate) {
-      const graylistExpDate = topUpDate.plus({ seconds: CACHE_MAX_AGE });
-      const delta = graylistExpDate.diffNow().toFormat("h'h' mm'm' ss's'");
-      const message = `The address ${address} is graylisted for another ${delta}`;
+    const graylistExpDate = addressCache.get<Date>(address);
+    if (graylistExpDate) {
+      const message = `The address ${address} is graylisted for another ${timeAgo(graylistExpDate)}`;
       logger.warn(message);
       res.status(425);
       res.send({ message });
       return;
     }
-    addressCache.set<DateTime>(address, DateTime.now());
+    addressCache.set<Date>(address, new Date(Date.now() + 1000 * CACHE_MAX_AGE));
     previousSpendPromise = (previousSpendPromise ?? Promise.resolve())
       .catch(fetchNonce)
       .then(() => aeSdk.spend(toAettos(TOPUP_AMOUNT), address, {

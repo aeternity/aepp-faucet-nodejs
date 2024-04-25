@@ -15,7 +15,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit dev
 COPY --from=frontend /app/dist dist
-COPY server.ts .
+COPY server.ts utils.ts ./
 ENV NODE_ENV production
 
 CMD [ "npx", "tsx", "server.ts"]

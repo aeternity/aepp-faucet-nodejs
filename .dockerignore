@@ -4,5 +4,6 @@
 !package.json
 !package-lock.json
 !server.ts
+!utils.ts
 !tsconfig.json
 !index.html
