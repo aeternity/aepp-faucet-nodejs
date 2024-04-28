@@ -92,8 +92,13 @@ form {
     border: none;
     border-radius: 0 .25rem .25rem 0;
     color: #ff0d6a;
+    cursor: pointer;
 
-    &:hover {
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
       text-decoration: underline;
       background-color: #171921;
     }

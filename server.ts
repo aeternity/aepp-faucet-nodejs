@@ -88,9 +88,9 @@ await new Promise<void>((resolve) => ViteExpress.listen(app, SERVER_LISTEN_PORT,
 
 ViteExpress.config({
   transformer: (html: string) => [
-    ['node', NODE_URL],
-    ['amount', TOPUP_AMOUNT],
-    ['explorer_url', EXPLORER_URL],
+    ['NODE_URL', NODE_URL],
+    ['TOPUP_AMOUNT', TOPUP_AMOUNT],
+    ['EXPLORER_URL', EXPLORER_URL],
     ['REVISION', process.env.REVISION ?? 'local'],
   ].reduce((acc, [k, v]) => acc.replace(`{{ ${k} }}`, v), html),
 });
