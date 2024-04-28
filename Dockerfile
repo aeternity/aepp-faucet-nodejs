@@ -17,5 +17,7 @@ RUN npm ci --omit dev
 COPY --from=frontend /app/dist dist
 COPY server.ts utils.ts ./
 ENV NODE_ENV production
+ARG REVISION
+ENV REVISION $REVISION
 
 CMD [ "npx", "tsx", "server.ts"]
