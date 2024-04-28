@@ -1,0 +1,13 @@
+{
+  "name": "Faucet Aepp",
+  "description": "Recharge your account on the Aeternity Testnet",
+  "categories": ["finance"],
+  "aeternity_network_ids": ["ae_uat"],
+  "author": "Aeternity",
+  "author_url": "https://github.com/aeternity/aepp-faucet-nodejs",
+  "lang": "en",
+  "icons": [{
+    "src": "/faucet.png",
+    "sizes": "64x64"
+  }]
+}
