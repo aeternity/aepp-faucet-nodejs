@@ -3,13 +3,15 @@ html, body {
 }
 
 body {
+  margin: 0;
   background-color: #343746;
   color: #edf3f7;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   display: flex;
+  flex-direction: column;
   line-height: 1.5;
 
-  > div {
+  > main {
     max-width: 1280px;
     margin: auto;
     width: 100%;
@@ -17,7 +19,18 @@ body {
     box-sizing: border-box;
 
     @media (max-width: 576px) {
-      padding: 0 0.5rem;
+      padding: 0 1rem;
+    }
+  }
+
+  > .bottom-line {
+    text-align: center;
+    color: #a0aec0;
+    margin: .8rem 0;
+    font-size: .8rem;
+
+    a {
+      color: inherit;
     }
   }
 }
@@ -46,15 +59,33 @@ a {
   }
 }
 
+input, button {
+  font-size: 100%;
+  height: 3rem;
+  line-height: 3rem;
+}
+
+button {
+  padding: 1px 1.5rem;
+  background-color: #282a36;
+  border: none;
+  border-radius: .25rem;
+  color: #ff0d6a;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    text-decoration: underline;
+    background-color: #171921;
+  }
+}
+
 form {
   margin-top: 2rem;
   display: flex;
-
-  input, button {
-    font-size: 100%;
-    height: 3rem;
-    line-height: 3rem;
-  }
 
   input {
     flex-grow: 2;
@@ -75,15 +106,22 @@ form {
   button {
     padding: 1px;
     flex-grow: 1;
-    background-color: #282a36;
-    border: none;
-    border-radius: 0 .25rem .25rem 0;
-    color: #ff0d6a;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
 
-    &:hover {
-      text-decoration: underline;
-      background-color: #171921;
-    }
+.connect-wallet {
+  margin-top: 2rem;
+  text-align: center;
+
+  span {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+  button {
+    margin-left: .8rem;
   }
 }
 

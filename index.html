@@ -8,18 +8,28 @@
     <title>Faucet Aepp</title>
   </head>
   <body>
-    <div>
+    <main>
       <h1>
         🚰<br/>
         <a href="https://aeternity.com">Æternity Blockchain</a>'s Faucet Aepp
       </h1>
-      <h4>{{ node }}</h4>
-      <form id="form" data-amount="{{ amount }}" data-explorer-url="{{ explorer_url }}">
+      <h4>{{ NODE_URL }}</h4>
+      <form id="form">
         <input name="address" placeholder="ak_YOUrPubl1ckeyh4sHh3r3" required>
         <button>Top UP</button>
       </form>
+      <div class="connect-wallet">
+        <span>or</span> <button>Connect Wallet</button>
+      </div>
       <div id="result"></div>
+    </main>
+    <div class="bottom-line">
+      {{ REVISION }} | <a href="https://github.com/aeternity/aepp-faucet-nodejs/issues/new" target="_blank">report a bug</a>
     </div>
+    <script>
+      window.TOPUP_AMOUNT = '{{ TOPUP_AMOUNT }}'
+      window.EXPLORER_URL = '{{ EXPLORER_URL }}'
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

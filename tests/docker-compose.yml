@@ -2,7 +2,10 @@ version: '3'
 services:
   faucet:
     image: aepp-faucet-nodejs
-    build: ..
+    build:
+      context: ..
+      args:
+        - REVISION=v1.2.0-tests
     ports: ["5001:5000"]
     environment:
       - FAUCET_ACCOUNT_PRIV_KEY=9ebd7beda0c79af72a42ece3821a56eff16359b6df376cf049aee995565f022f840c974b97164776454ba119d84edc4d6058a8dec92b6edc578ab2d30b4c4200
