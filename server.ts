@@ -91,7 +91,7 @@ ViteExpress.config({
     ['NODE_URL', NODE_URL],
     ['TOPUP_AMOUNT', TOPUP_AMOUNT],
     ['EXPLORER_URL', EXPLORER_URL],
-    ['REVISION', process.env.REVISION ?? 'local'],
+    ['REVISION', process.env.REVISION || 'local'],
   ].reduce((acc, [k, v]) => acc.replace(`{{ ${k} }}`, v), html),
 });
 
