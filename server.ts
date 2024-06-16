@@ -39,7 +39,11 @@ async function fetchNonce() {
   nonce = (await aeSdk.api.getAccountNextNonce(aeSdk.address)).nextNonce;
   console.info(`Synced nonce ${nonce}`);
 }
-await fetchNonce();
+
+const [NETWORK_NAME] = await Promise.all([
+  aeSdk.api.getCurrency().then(({ networkName }) => networkName),
+  fetchNonce(),
+]);
 
 let previousSpendPromise: ReturnType<typeof aeSdk.spend>;
 app.post('/account/:recipient_address', async (req, res) => {
@@ -88,6 +92,7 @@ await new Promise<void>((resolve) => ViteExpress.listen(app, SERVER_LISTEN_PORT,
 
 ViteExpress.config({
   transformer: (html: string) => [
+    ['NETWORK_NAME', NETWORK_NAME],
     ['NODE_URL', NODE_URL],
     ['TOPUP_AMOUNT', TOPUP_AMOUNT],
     ['EXPLORER_URL', EXPLORER_URL],
