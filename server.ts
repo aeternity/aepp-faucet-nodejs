@@ -40,10 +40,7 @@ async function fetchNonce() {
   console.info(`Synced nonce ${nonce}`);
 }
 
-const [NETWORK_NAME] = await Promise.all([
-  aeSdk.api.getCurrency().then(({ networkName }) => networkName),
-  fetchNonce(),
-]);
+const [currency] = await Promise.all([aeSdk.api.getCurrency(), fetchNonce()]);
 
 let previousSpendPromise: ReturnType<typeof aeSdk.spend>;
 app.post('/account/:recipient_address', async (req, res) => {
@@ -78,11 +75,11 @@ app.post('/account/:recipient_address', async (req, res) => {
         verify: false,
       }));
     const tx = await previousSpendPromise;
-    console.info(`Top up ${address} with ${TOPUP_AMOUNT} AE, tx hash ${tx.hash}`);
+    console.info(`Top up ${address} with ${TOPUP_AMOUNT} ${currency.symbol}, tx hash ${tx.hash}`);
     const balance = await aeSdk.getBalance(address);
     res.send({ tx_hash: tx.hash, balance });
   } catch (err) {
-    console.error(`Generic error: top up ${address} of ${TOPUP_AMOUNT} AE on ${NODE_URL.replace('https://', '')} failed with error.`, err);
+    console.error(`Generic error: top up ${address} of ${TOPUP_AMOUNT} ${currency.symbol} on ${NODE_URL.replace('https://', '')} failed with error.`, err);
     res.status(500);
     res.send({ message: `Unknown error, please contact <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>` });
   }
@@ -92,7 +89,9 @@ await new Promise<void>((resolve) => ViteExpress.listen(app, SERVER_LISTEN_PORT,
 
 ViteExpress.config({
   transformer: (html: string) => [
-    ['NETWORK_NAME', NETWORK_NAME],
+    ['NETWORK_NAME', currency.networkName],
+    ['SYMBOL', currency.symbol],
+    ['COLOR_PRIMARY', currency.primaryColour],
     ['NODE_URL', NODE_URL],
     ['TOPUP_AMOUNT', TOPUP_AMOUNT],
     ['EXPLORER_URL', EXPLORER_URL],
@@ -102,4 +101,4 @@ ViteExpress.config({
 
 console.info(`Faucet listening at http://0.0.0.0:${SERVER_LISTEN_PORT}`);
 console.info(`Faucet Address: ${aeSdk.address}`);
-console.info(`Faucet Balance: ${toAe(await aeSdk.getBalance(aeSdk.address))} AE`);
+console.info(`Faucet Balance: ${toAe(await aeSdk.getBalance(aeSdk.address))} ${currency.symbol}`);

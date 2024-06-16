@@ -31,7 +31,13 @@
     <script>
       window.TOPUP_AMOUNT = '{{ TOPUP_AMOUNT }}'
       window.EXPLORER_URL = '{{ EXPLORER_URL }}'
+      window.SYMBOL = '{{ SYMBOL }}'
     </script>
+    <style>
+      :root {
+        --color-primary: {{ COLOR_PRIMARY }};
+      }
+    </style>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
