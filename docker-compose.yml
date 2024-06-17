@@ -1,0 +1,34 @@
+services:
+  middleware:
+    # TODO: use upstream after solving https://github.com/aeternity/ae_mdw/issues/1758
+    image: davidyuk/temp:mdw-dev-mode
+    ports: [4000:4000, 4001:4001, 3013:3013, 3313:3313]
+    volumes:
+      - ./docker/aeternity.yaml:/home/aeternity/aeternity.yaml
+    stop_grace_period: 0s
+
+  explorer:
+    # TODO: use upstream after merging https://github.com/aeternity/aescan/pull/774
+    image: davidyuk/temp:explorer
+    ports: [3070:80]
+    environment:
+      - NUXT_PUBLIC_NETWORK_NAME=Localnet
+      - NUXT_PUBLIC_NODE_URL=http://host.docker.internal:3013
+      - NUXT_PUBLIC_MIDDLEWARE_URL=http://host.docker.internal:4000
+      - NUXT_PUBLIC_WEBSOCKET_URL=ws://host.docker.internal:4001/v2/websocket
+    depends_on:
+      middleware:
+        condition: service_healthy
+
+  faucet:
+    build: .
+    ports: [5001:5000]
+    environment:
+      - FAUCET_ACCOUNT_PRIV_KEY=9ebd7beda0c79af72a42ece3821a56eff16359b6df376cf049aee995565f022f840c974b97164776454ba119d84edc4d6058a8dec92b6edc578ab2d30b4c4200
+      - TOPUP_AMOUNT=0.01
+      - SPEND_TX_PAYLOAD=Test Faucet Tx
+      - NODE_URL=http://host.docker.internal:3013
+      - EXPLORER_URL=http://host.docker.internal:3070
+    depends_on:
+      middleware:
+        condition: service_healthy

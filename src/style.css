@@ -51,7 +51,7 @@ h4 {
 }
 
 a {
-  color: #ff0d6a;
+  color: var(--color-primary);
   text-decoration: none;
 
   &:hover {
@@ -70,7 +70,7 @@ button {
   background-color: #282a36;
   border: none;
   border-radius: .25rem;
-  color: #ff0d6a;
+  color: var(--color-primary);
   cursor: pointer;
 
   &:disabled {
