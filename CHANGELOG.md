@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/aeternity/aepp-faucet-nodejs/compare/v1.1.0...v1.2.0) (2024-06-24)
+
+
+### Features
+
+* add wallet connect button, version at the bottom ([#33](https://github.com/aeternity/aepp-faucet-nodejs/issues/33)) ([9f9cbf0](https://github.com/aeternity/aepp-faucet-nodejs/commit/9f9cbf0c0ba9a60fa330f5e145ed2a19647a4e33))
+* show network name instead network url, and related fixes ([#36](https://github.com/aeternity/aepp-faucet-nodejs/issues/36)) ([e16817b](https://github.com/aeternity/aepp-faucet-nodejs/commit/e16817b5dec0328dfb33865b4e83fc2715f64237))
+
 ## [1.1.0](https://github.com/aeternity/aepp-faucet-nodejs/compare/v1.0.0...v1.1.0) (2024-04-23)
 
 
