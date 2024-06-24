@@ -3,8 +3,8 @@
 !public
 !package.json
 !package-lock.json
-!server.ts
-!utils.ts
+!src-server
 !tsconfig.json
+!tsconfig.server.json
 !vite.config.ts
 !index.html
