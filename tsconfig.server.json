@@ -6,6 +6,8 @@
     "skipLibCheck": true,
     "outDir": "dist-server",
     "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "rootDir": "src-server",
 
     /* Linting */
     "strict": true,

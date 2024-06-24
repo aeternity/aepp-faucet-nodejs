@@ -5,6 +5,7 @@ import {
   AeSdk, toAettos, toAe, MemoryAccount, Node, isAddressValid, encode, Encoding,
 } from '@aeternity/aepp-sdk';
 import cors from 'cors';
+import pkg from '../package.json' with { type: 'json' };
 import { timeAgo, getRequiredVariable, getNumberVariable } from './utils.js';
 
 const FAUCET_ACCOUNT_PRIV_KEY = getRequiredVariable('FAUCET_ACCOUNT_PRIV_KEY');
@@ -90,6 +91,7 @@ const server = await new Promise<Server>((resolve) => {
   const s = ViteExpress.listen(app, SERVER_LISTEN_PORT, () => resolve(s));
 });
 
+const revision = process.env.REVISION || 'local';
 ViteExpress.config({
   transformer: (html: string) => [
     ['NETWORK_NAME', currency.networkName],
@@ -98,8 +100,10 @@ ViteExpress.config({
     ['NODE_URL', NODE_URL],
     ['TOPUP_AMOUNT', TOPUP_AMOUNT],
     ['EXPLORER_URL', EXPLORER_URL],
-    ['REVISION', process.env.REVISION || 'local'],
-  ].reduce((acc, [k, v]) => acc.replace(`{{ ${k} }}`, v), html),
+    ['VERSION', pkg.version],
+    ['REVISION', revision],
+    ['REVISION_SHORT', revision.slice(0, 7)],
+  ].reduce((acc, [k, v]) => acc.replaceAll(`{{ ${k} }}`, v), html),
 });
 
 console.info(`Faucet listening at http://0.0.0.0:${SERVER_LISTEN_PORT}`);
