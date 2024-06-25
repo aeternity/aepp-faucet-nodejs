@@ -1,4 +1,4 @@
-export const getRequiredVariable = (variableName): string => {
+export const getRequiredVariable = (variableName: string): string => {
   const value = process.env[variableName];
   if (value) return value;
   throw new Error(`ENV-variable missing: ${variableName}`);
@@ -19,7 +19,7 @@ const units = [
   ['second', 1000],
 ] as const;
 
-export function timeAgo(date) {
+export function timeAgo(date: Date) {
   const diff = Math.abs(Date.now() - date.getTime());
   for (const [name, size] of units) {
     const value = Math.round(diff / size);

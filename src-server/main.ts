@@ -1,10 +1,12 @@
 import express from 'express';
 import ViteExpress from 'vite-express';
+import { Server } from 'http';
 import {
   AeSdk, toAettos, toAe, MemoryAccount, Node, isAddressValid, encode, Encoding,
 } from '@aeternity/aepp-sdk';
 import cors from 'cors';
-import { timeAgo, getRequiredVariable, getNumberVariable } from './utils.ts';
+import pkg from '../package.json' with { type: 'json' };
+import { timeAgo, getRequiredVariable, getNumberVariable } from './utils.js';
 
 const FAUCET_ACCOUNT_PRIV_KEY = getRequiredVariable('FAUCET_ACCOUNT_PRIV_KEY');
 const TOPUP_AMOUNT = process.env.TOPUP_AMOUNT || '5';
@@ -19,7 +21,7 @@ console.info = (...args: unknown[]) => info(`[${new Date().toISOString()}] INFO`
 console.error = (...args: unknown[]) => error(`[${new Date().toISOString()}] ERROR`, ...args);
 
 const grayList = new Map<string, Date>();
-setInterval(() => {
+const grayListInterval = setInterval(() => {
   grayList.forEach((date, address) => {
     if (date > new Date()) return;
     grayList.delete(address);
@@ -34,7 +36,7 @@ const aeSdk = new AeSdk({
 const app = express();
 app.use(cors());
 
-let nonce;
+let nonce: number;
 async function fetchNonce() {
   nonce = (await aeSdk.api.getAccountNextNonce(aeSdk.address)).nextNonce;
   console.info(`Synced nonce ${nonce}`);
@@ -85,8 +87,11 @@ app.post('/account/:recipient_address', async (req, res) => {
   }
 });
 
-await new Promise<void>((resolve) => ViteExpress.listen(app, SERVER_LISTEN_PORT, resolve));
+const server = await new Promise<Server>((resolve) => {
+  const s = ViteExpress.listen(app, SERVER_LISTEN_PORT, () => resolve(s));
+});
 
+const revision = process.env.REVISION || 'local';
 ViteExpress.config({
   transformer: (html: string) => [
     ['NETWORK_NAME', currency.networkName],
@@ -95,10 +100,19 @@ ViteExpress.config({
     ['NODE_URL', NODE_URL],
     ['TOPUP_AMOUNT', TOPUP_AMOUNT],
     ['EXPLORER_URL', EXPLORER_URL],
-    ['REVISION', process.env.REVISION || 'local'],
-  ].reduce((acc, [k, v]) => acc.replace(`{{ ${k} }}`, v), html),
+    ['VERSION', pkg.version],
+    ['REVISION', revision],
+    ['REVISION_SHORT', revision.slice(0, 7)],
+  ].reduce((acc, [k, v]) => acc.replaceAll(`{{ ${k} }}`, v), html),
 });
 
 console.info(`Faucet listening at http://0.0.0.0:${SERVER_LISTEN_PORT}`);
 console.info(`Faucet Address: ${aeSdk.address}`);
 console.info(`Faucet Balance: ${toAe(await aeSdk.getBalance(aeSdk.address))} ${currency.symbol}`);
+
+function closeServer() {
+  server.close();
+  clearInterval(grayListInterval);
+}
+process.on('SIGINT', closeServer);
+process.on('SIGTERM', closeServer);
