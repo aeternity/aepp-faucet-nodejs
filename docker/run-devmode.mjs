@@ -6,7 +6,7 @@ import { execSync } from 'child_process';
 try {
   execSync(
     'docker compose exec middleware ./bin/ae_mdw rpc ":aeplugin_dev_mode_app.start_unlink()"',
-    { stdio : 'pipe' },
+    { stdio: 'pipe' },
   );
 } catch (error) {
   if (!error.message.includes('{:error, {:already_started')) throw error;

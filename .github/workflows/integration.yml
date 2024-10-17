@@ -2,7 +2,7 @@ name: integration
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   publish:
@@ -18,4 +18,4 @@ jobs:
       DEPLOY_ENV: stg
       DEPLOY_APP: aepp-faucet
       DEPLOY_VERSION: master
-      DEPLOY_SUBDOMAIN: "faucet"
+      DEPLOY_SUBDOMAIN: 'faucet'

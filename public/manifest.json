@@ -6,8 +6,10 @@
   "author": "Aeternity",
   "author_url": "https://github.com/aeternity/aepp-faucet-nodejs",
   "lang": "en",
-  "icons": [{
-    "src": "/faucet.png",
-    "sizes": "64x64"
-  }]
+  "icons": [
+    {
+      "src": "/faucet.png",
+      "sizes": "64x64"
+    }
+  ]
 }

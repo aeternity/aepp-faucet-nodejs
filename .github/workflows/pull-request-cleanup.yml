@@ -2,8 +2,8 @@ name: pull-request-cleanup
 
 on:
   pull_request:
-    branches: [ master ]
-    types: [ closed ]
+    branches: [master]
+    types: [closed]
 
 jobs:
   rollback:
@@ -12,14 +12,14 @@ jobs:
     with:
       DEPLOY_ENV: stg
       DEPLOY_APP: aepp-faucet
-      DEPLOY_VERSION: "pr-${{ github.event.number }}"
-      DEPLOY_SUBDOMAIN: "pr-${{ github.event.number }}-faucet"
+      DEPLOY_VERSION: 'pr-${{ github.event.number }}'
+      DEPLOY_SUBDOMAIN: 'pr-${{ github.event.number }}-faucet'
   delete-tag:
     uses: aeternity/github-actions/.github/workflows/_delete-tag-ecr.yml@v2.3.1
     secrets: inherit
     with:
-      TAG: "pr-${{ github.event.number }}"
+      TAG: 'pr-${{ github.event.number }}'
   cleanup:
     uses: aeternity/github-actions/.github/workflows/_cleanup-ecr.yml@v2.3.1
-    needs: [ delete-tag ]
+    needs: [delete-tag]
     secrets: inherit

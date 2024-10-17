@@ -2,7 +2,7 @@ name: pull-request
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   validate:
@@ -19,5 +19,5 @@ jobs:
     with:
       DEPLOY_ENV: stg
       DEPLOY_APP: aepp-faucet
-      DEPLOY_VERSION: "pr-${{ github.event.number }}"
-      DEPLOY_SUBDOMAIN: "pr-${{ github.event.number }}-faucet"
+      DEPLOY_VERSION: 'pr-${{ github.event.number }}'
+      DEPLOY_SUBDOMAIN: 'pr-${{ github.event.number }}-faucet'
