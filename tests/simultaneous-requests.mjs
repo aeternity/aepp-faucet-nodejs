@@ -1,7 +1,7 @@
-import { generateKeyPair } from '@aeternity/aepp-sdk';
+import { MemoryAccount } from '@aeternity/aepp-sdk';
 import assert from 'assert';
 
-const addresses = new Array(5).fill().map(() => generateKeyPair().publicKey);
+const addresses = new Array(5).fill().map(() => MemoryAccount.generate().address);
 
 await Promise.all(
   addresses.map(async (address) => {

@@ -2,16 +2,13 @@ import { SetResult } from './result.ts';
 import {
   BrowserWindowMessageConnection,
   walletDetector,
-  AeSdkAepp,
+  WalletConnectorFrame,
   Encoded,
 } from '@aeternity/aepp-sdk';
 
 export default async function getWalletAddress(
   setResult: SetResult,
 ): Promise<Encoded.AccountAddress> {
-  const aeSdk = new AeSdkAepp({ name: 'Faucet Aepp' });
-  // TODO: remove after merging https://github.com/aeternity/aepp-sdk-js/pull/1981
-  aeSdk._ensureAccountAccess = () => {};
   let connection = new BrowserWindowMessageConnection();
   setResult('loading', 'Connecting to wallet', 'Waiting for wallet invitation.');
   let walletName;
@@ -28,14 +25,14 @@ export default async function getWalletAddress(
       reject(new Error("We can't find a wallet."));
     }, 5000);
   });
-  await aeSdk.connectToWallet(connection);
+  const connector = await WalletConnectorFrame.connect('Faucet Aepp', connection);
   setResult('loading', 'Connecting to wallet', `Asked ${walletName} for address.`);
-  let addresses;
+  let accounts;
   try {
-    addresses = await aeSdk.askAddresses();
+    accounts = await connector.getAccounts();
   } finally {
-    aeSdk.disconnectWallet();
+    connector.disconnect();
   }
-  if (addresses.length === 0) throw new Error(`${walletName} didn\'t provide an address.`);
-  return addresses[0];
+  if (accounts.length === 0) throw new Error(`${walletName} didn\'t provide an address.`);
+  return accounts[0].address;
 }

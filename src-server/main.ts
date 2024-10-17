@@ -10,12 +10,34 @@ import {
   isAddressValid,
   encode,
   Encoding,
+  Encoded,
 } from '@aeternity/aepp-sdk';
 import cors from 'cors';
 import pkg from '../package.json' with { type: 'json' };
-import { timeAgo, getRequiredVariable, getNumberVariable } from './utils.js';
+import { timeAgo, getNumberVariable } from './utils.js';
 
-const FAUCET_ACCOUNT_PRIV_KEY = getRequiredVariable('FAUCET_ACCOUNT_PRIV_KEY');
+function getSecretKey(): Encoded.AccountSecretKey {
+  if (process.env.FAUCET_ACCOUNT_SECRET_KEY) {
+    if (!isAddressValid(process.env.FAUCET_ACCOUNT_SECRET_KEY, Encoding.AccountSecretKey)) {
+      throw new Error('FAUCET_ACCOUNT_SECRET_KEY is not encoded as sk_');
+    }
+    return process.env.FAUCET_ACCOUNT_SECRET_KEY;
+  }
+  if (process.env.FAUCET_ACCOUNT_PRIV_KEY) {
+    console.warn(
+      'FAUCET_ACCOUNT_PRIV_KEY is deprecated, provide FAUCET_ACCOUNT_SECRET_KEY instead',
+    );
+    const buffer = Buffer.from(process.env.FAUCET_ACCOUNT_PRIV_KEY, 'hex');
+    if (buffer.length !== 64) {
+      throw new Error(
+        `Invalid FAUCET_ACCOUNT_PRIV_KEY length: expected 64 bytes, got ${buffer.length} instead`,
+      );
+    }
+    return encode(buffer.subarray(0, 32), Encoding.AccountSecretKey);
+  }
+  throw new Error(`ENV-variable missing: FAUCET_ACCOUNT_SECRET_KEY`);
+}
+
 const TOPUP_AMOUNT = process.env.TOPUP_AMOUNT || '5';
 const SPEND_TX_PAYLOAD = process.env.SPEND_TX_PAYLOAD || 'Faucet Tx';
 const NODE_URL = process.env.NODE_URL || 'https://testnet.aeternity.io';
@@ -37,7 +59,7 @@ const grayListInterval = setInterval(() => {
 
 const aeSdk = new AeSdk({
   nodes: [{ name: 'node', instance: new Node(NODE_URL) }],
-  accounts: [new MemoryAccount(FAUCET_ACCOUNT_PRIV_KEY)],
+  accounts: [new MemoryAccount(getSecretKey())],
 });
 
 const app = express();
