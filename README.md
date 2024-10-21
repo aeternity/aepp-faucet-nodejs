@@ -44,7 +44,7 @@ if (status !== 200) throw new Error(`Unexpected faucet response code: ${status}`
 
 Configuring Faucet application via environment variable:
 
-- `FAUCET_ACCOUNT_PRIV_KEY` The account that faucet aepp will top off the account. (Required)
+- `FAUCET_ACCOUNT_SECRET_KEY` The account that faucet aepp will top off the account. (Required)
 - `TOPUP_AMOUNT` The amount of tokens that the faucet application will place into your account. (Default: 5AE)
 - `SPEND_TX_PAYLOAD` Value to use to fill the payload for the transactions (Default: `Faucet Tx`)
 - `NODE_URL` URL of the node that the faucet aepp is using. (Default: 'https://testnet.aeternity.io')
@@ -63,7 +63,7 @@ To build and run it locally execute following commands in the root:
 
 ```
 npm install
-export FAUCET_ACCOUNT_PRIV_KEY=9ebd7beda0c79af72a42ece3821a56eff16359b6df376cf049aee995565f022f840c974b97164776454ba119d84edc4d6058a8dec92b6edc578ab2d30b4c4200
+export FAUCET_ACCOUNT_SECRET_KEY=sk_2CuofqWZHrABCrM7GY95YSQn8PyFvKQadnvFnpwhjUnDCFAWmf
 export TOPUP_AMOUNT=0.01
 npm run dev
 ```
