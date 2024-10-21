@@ -2,13 +2,13 @@ export const getRequiredVariable = (variableName: string): string => {
   const value = process.env[variableName];
   if (value) return value;
   throw new Error(`ENV-variable missing: ${variableName}`);
-}
+};
 
 export const getNumberVariable = (variableName: string, def: number): number => {
   const value = process.env[variableName];
   if (value) return +value;
   return def;
-}
+};
 
 const units = [
   ['year', 365 * 24 * 60 * 60 * 1000],

@@ -2,7 +2,14 @@ import express from 'express';
 import ViteExpress from 'vite-express';
 import { Server } from 'http';
 import {
-  AeSdk, toAettos, toAe, MemoryAccount, Node, isAddressValid, encode, Encoding,
+  AeSdk,
+  toAettos,
+  toAe,
+  MemoryAccount,
+  Node,
+  isAddressValid,
+  encode,
+  Encoding,
 } from '@aeternity/aepp-sdk';
 import cors from 'cors';
 import pkg from '../package.json' with { type: 'json' };
@@ -68,22 +75,27 @@ app.post('/account/:recipient_address', async (req, res) => {
     }
     grayList.set(address, new Date(Date.now() + 1000 * 60 * 60 * 4));
 
-    previousSpendPromise = (previousSpendPromise ?? Promise.resolve())
-      .catch(fetchNonce)
-      .then(() => aeSdk.spend(toAettos(TOPUP_AMOUNT), address, {
+    previousSpendPromise = (previousSpendPromise ?? Promise.resolve()).catch(fetchNonce).then(() =>
+      aeSdk.spend(toAettos(TOPUP_AMOUNT), address, {
         // @ts-expect-error string not supported on sdk side
         payload: encode(Buffer.from(SPEND_TX_PAYLOAD), Encoding.Bytearray),
         nonce: nonce++,
         verify: false,
-      }));
+      }),
+    );
     const tx = await previousSpendPromise;
     console.info(`Top up ${address} with ${TOPUP_AMOUNT} ${currency.symbol}, tx hash ${tx.hash}`);
     const balance = await aeSdk.getBalance(address);
     res.send({ tx_hash: tx.hash, balance });
   } catch (err) {
-    console.error(`Generic error: top up ${address} of ${TOPUP_AMOUNT} ${currency.symbol} on ${NODE_URL.replace('https://', '')} failed with error.`, err);
+    console.error(
+      `Generic error: top up ${address} of ${TOPUP_AMOUNT} ${currency.symbol} on ${NODE_URL.replace('https://', '')} failed with error.`,
+      err,
+    );
     res.status(500);
-    res.send({ message: `Unknown error, please contact <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>` });
+    res.send({
+      message: `Unknown error, please contact <a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a>`,
+    });
   }
 });
 
@@ -93,17 +105,18 @@ const server = await new Promise<Server>((resolve) => {
 
 const revision = process.env.REVISION || 'local';
 ViteExpress.config({
-  transformer: (html: string) => [
-    ['NETWORK_NAME', currency.networkName],
-    ['SYMBOL', currency.symbol],
-    ['COLOR_PRIMARY', currency.primaryColour],
-    ['NODE_URL', NODE_URL],
-    ['TOPUP_AMOUNT', TOPUP_AMOUNT],
-    ['EXPLORER_URL', EXPLORER_URL],
-    ['VERSION', pkg.version],
-    ['REVISION', revision],
-    ['REVISION_SHORT', revision.slice(0, 7)],
-  ].reduce((acc, [k, v]) => acc.replaceAll(`{{ ${k} }}`, v), html),
+  transformer: (html: string) =>
+    [
+      ['NETWORK_NAME', currency.networkName],
+      ['SYMBOL', currency.symbol],
+      ['COLOR_PRIMARY', currency.primaryColour],
+      ['NODE_URL', NODE_URL],
+      ['TOPUP_AMOUNT', TOPUP_AMOUNT],
+      ['EXPLORER_URL', EXPLORER_URL],
+      ['VERSION', pkg.version],
+      ['REVISION', revision],
+      ['REVISION_SHORT', revision.slice(0, 7)],
+    ].reduce((acc, [k, v]) => acc.replaceAll(`{{ ${k} }}`, v), html),
 });
 
 console.info(`Faucet listening at http://0.0.0.0:${SERVER_LISTEN_PORT}`);

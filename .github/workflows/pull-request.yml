@@ -2,9 +2,11 @@ name: pull-request
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
+  validate:
+    uses: ./.github/workflows/_validate-npm.yml
   publish:
     uses: aeternity/github-actions/.github/workflows/_publish-ecr.yml@v2.3.1
     secrets: inherit
@@ -17,5 +19,5 @@ jobs:
     with:
       DEPLOY_ENV: stg
       DEPLOY_APP: aepp-faucet
-      DEPLOY_VERSION: "pr-${{ github.event.number }}"
-      DEPLOY_SUBDOMAIN: "pr-${{ github.event.number }}-faucet"
+      DEPLOY_VERSION: 'pr-${{ github.event.number }}'
+      DEPLOY_SUBDOMAIN: 'pr-${{ github.event.number }}-faucet'
