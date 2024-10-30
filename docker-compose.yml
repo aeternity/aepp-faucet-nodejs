@@ -1,7 +1,7 @@
 services:
   middleware:
     # TODO: use upstream after solving https://github.com/aeternity/ae_mdw/issues/1758
-    image: davidyuk/temp:mdw-dev-mode
+    image: davidyuk/temp:mdw-dev-mode-1.81.0
     ports: [4000:4000, 4001:4001, 3013:3013, 3313:3313]
     volumes:
       - ./docker/aeternity.yaml:/home/aeternity/aeternity.yaml
@@ -27,7 +27,7 @@ services:
         - REVISION=30f55b83c6f94a62f2f83c256c79d6ee86b95b59
     ports: [5001:5000]
     environment:
-      - FAUCET_ACCOUNT_PRIV_KEY=9ebd7beda0c79af72a42ece3821a56eff16359b6df376cf049aee995565f022f840c974b97164776454ba119d84edc4d6058a8dec92b6edc578ab2d30b4c4200
+      - FAUCET_ACCOUNT_SECRET_KEY=sk_2CuofqWZHrABCrM7GY95YSQn8PyFvKQadnvFnpwhjUnDCFAWmf
       - TOPUP_AMOUNT=0.01
       - SPEND_TX_PAYLOAD=Test Faucet Tx
       - NODE_URL=http://host.docker.internal:3013
