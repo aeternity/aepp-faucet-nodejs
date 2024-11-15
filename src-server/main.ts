@@ -95,7 +95,6 @@ app.post('/account/:recipient_address', async (req, res) => {
       res.send({ message });
       return;
     }
-    grayList.set(address, new Date(Date.now() + 1000 * 60 * 60 * 4));
 
     previousSpendPromise = (previousSpendPromise ?? Promise.resolve()).catch(fetchNonce).then(() =>
       aeSdk.spend(toAettos(TOPUP_AMOUNT), address, {
@@ -106,6 +105,7 @@ app.post('/account/:recipient_address', async (req, res) => {
       }),
     );
     const tx = await previousSpendPromise;
+    grayList.set(address, new Date(Date.now() + 1000 * 60 * 60 * 4));
     console.info(`Top up ${address} with ${TOPUP_AMOUNT} ${currency.symbol}, tx hash ${tx.hash}`);
     const balance = await aeSdk.getBalance(address);
     res.send({ tx_hash: tx.hash, balance });
