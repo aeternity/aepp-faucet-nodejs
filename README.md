@@ -47,7 +47,7 @@ Configuring Faucet application via environment variable:
 - `FAUCET_ACCOUNT_SECRET_KEY` The account that faucet aepp will top off the account. (Required)
 - `TOPUP_AMOUNT` The amount of tokens that the faucet application will place into your account. (Default: 5AE)
 - `SPEND_TX_PAYLOAD` Value to use to fill the payload for the transactions (Default: `Faucet Tx`)
-- `SPEND_TX_TTL` Spend transaction TTL. Higher value needs to be used in fast beating networks i.e. Hyperchains (Default: `3`)
+- `SPEND_TX_TTL` Spend transaction relative TTL. Higher value needs to be used in fast beating networks i.e. Hyperchains (Default: `3`)
 - `NODE_URL` URL of the node that the faucet aepp is using. (Default: 'https://testnet.aeternity.io')
 - `EXPLORER_URL` URL of the explorer app (Default: 'https://testnet.aescan.io')
 - `SUPPORT_EMAIL` Email to display for support requests (Default: `aepp-dev@aeternity.com`)
