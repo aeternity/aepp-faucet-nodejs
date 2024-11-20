@@ -40,6 +40,7 @@ function getSecretKey(): Encoded.AccountSecretKey {
 
 const TOPUP_AMOUNT = process.env.TOPUP_AMOUNT || '5';
 const SPEND_TX_PAYLOAD = process.env.SPEND_TX_PAYLOAD || 'Faucet Tx';
+const SPEND_TX_TTL = process.env.SPEND_TX_TTL || '3';
 const NODE_URL = process.env.NODE_URL || 'https://testnet.aeternity.io';
 const EXPLORER_URL = process.env.EXPLORER_URL || 'https://testnet.aescan.io';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'aepp-dev@aeternity.com';
@@ -102,6 +103,7 @@ app.post('/account/:recipient_address', async (req, res) => {
         payload: encode(Buffer.from(SPEND_TX_PAYLOAD), Encoding.Bytearray),
         nonce: nonce++,
         verify: false,
+        ttl: +SPEND_TX_TTL,
       }),
     );
     const tx = await previousSpendPromise;
