@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/aeternity/aepp-faucet-nodejs/compare/v1.2.0...v1.2.1) (2024-11-20)
+
+
+### Bug Fixes
+
+* don't graylist if top up failed ([#45](https://github.com/aeternity/aepp-faucet-nodejs/issues/45)) ([09c0e19](https://github.com/aeternity/aepp-faucet-nodejs/commit/09c0e194ae5735cf785689c608d01f1bb0c1e444))
+
 ## [1.2.0](https://github.com/aeternity/aepp-faucet-nodejs/compare/v1.1.0...v1.2.0) (2024-06-24)
 
 
