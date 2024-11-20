@@ -103,7 +103,7 @@ app.post('/account/:recipient_address', async (req, res) => {
         payload: encode(Buffer.from(SPEND_TX_PAYLOAD), Encoding.Bytearray),
         nonce: nonce++,
         verify: false,
-        ttl: parseInt(SPEND_TX_TTL, 10),
+        ttl: +SPEND_TX_TTL,
       }),
     );
     const tx = await previousSpendPromise;
